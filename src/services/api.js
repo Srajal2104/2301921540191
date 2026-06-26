@@ -1,138 +1,55 @@
-import { logger } from "../middleware/logger";
-
-
 const BASE_URL =
 "http://4.224.186.213/evaluation-service";
 
 
-let token = "";
+const headers=()=>({
 
+"Content-Type":"application/json",
 
-export const registerUser = async(user)=>{
+Authorization:
+`Bearer ${localStorage.getItem("token")}`
 
-    logger("Register API called",user);
-
-
-    const res = await fetch(
-        `${BASE_URL}/register`,
-        {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(user)
-        }
-    );
-
-
-    return await res.json();
-
-};
+});
 
 
 
-export const authenticate = async(data)=>{
-
-
-    logger("Auth API called");
-
-
-    const res = await fetch(
-        `${BASE_URL}/auth`,
-        {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(data)
-        }
-    );
-
-
-    const result = await res.json();
-
-
-    token=result.access_token;
-
-
-    localStorage.setItem(
-        "token",
-        token
-    );
-
-
-    return result;
-
-};
-
-
-
-
-
-export const sendLog = async(
-    level,
-    message
-)=>{
-
-
-await fetch(
- `${BASE_URL}/logs`,
- {
-  method:"POST",
-  headers:{
-   "Content-Type":"application/json"
-  },
-
-  body:JSON.stringify({
-
-    stack:"frontend",
-    level:level,
-    package:"api",
-    message:message
-
-  })
-
- }
-);
-
-
-};
-
-
-
-
-
-export const apiRequest = async(
-url,
-options={}
-)=>{
-
-
-const token =
-localStorage.getItem("token");
+export async function createNotification(data){
 
 
 const res =
 await fetch(
- url,
- {
+`${BASE_URL}/notifications`,
+{
 
- ...options,
+method:"POST",
 
- headers:{
+headers:headers(),
 
-  "Content-Type":"application/json",
+body:JSON.stringify(data)
 
-  Authorization:
-  `Bearer ${token}`
-
- }
-
- }
-);
+});
 
 
-return await res.json();
+return res.json();
+
+}
 
 
-};
+
+
+export async function getNotifications(){
+
+
+const res =
+await fetch(
+`${BASE_URL}/notifications`,
+{
+
+headers:headers()
+
+});
+
+
+return res.json();
+
+}

@@ -3,33 +3,32 @@ import {useEffect,useState} from "react";
 import NotificationForm from "../components/NotificationForm";
 import NotificationList from "../components/NotificationList";
 
+import {authenticate} from "../services/auth";
 import {getNotifications} from "../services/api";
-
-import {logger} from "../middleware/logger";
 
 
 function Home(){
 
 
-const [notifications,setNotifications]=useState([]);
+const [data,setData]=useState([]);
 
 
 
-const loadData=async()=>{
+async function load(){
 
- logger("Loading notifications");
+const res =
+await getNotifications();
 
- const data=await getNotifications();
+setData(res);
 
- setNotifications(data);
-
-};
+}
 
 
 
 useEffect(()=>{
 
- loadData();
+authenticate()
+.then(load)
 
 },[]);
 
@@ -41,15 +40,17 @@ return (
 
 
 <h1>
-Notification System
+Campus Notification System
 </h1>
 
 
-<NotificationForm refresh={loadData}/>
+<NotificationForm
+refresh={load}
+/>
 
 
-<NotificationList 
-notifications={notifications}
+<NotificationList
+notifications={data}
 />
 
 
@@ -57,8 +58,6 @@ notifications={notifications}
 
 )
 
-
 }
-
 
 export default Home;

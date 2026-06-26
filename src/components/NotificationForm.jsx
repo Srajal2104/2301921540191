@@ -1,82 +1,70 @@
-import { useState } from "react";
-import { sendNotification } from "../services/api";
-import { logger } from "../middleware/logger";
+import {useState} from "react";
+import {createNotification} from "../services/api";
 
 
-function NotificationForm({refresh}) {
-
-  const [form,setForm] = useState({
-    userId:"",
-    message:"",
-    type:"INFO"
-  });
+function NotificationForm({refresh}){
 
 
-  const handleChange=(e)=>{
-    setForm({
-      ...form,
-      [e.target.name]:e.target.value
-    });
-  };
+const [message,setMessage]=useState("");
+
+const send=async(e)=>{
+
+e.preventDefault();
 
 
-  const submit=async(e)=>{
-    e.preventDefault();
+await createNotification({
 
-    logger("Form submitted",form);
+userId:"1",
 
-    await sendNotification(form);
+message,
 
-    alert("Notification Sent");
+type:"INFO"
 
-    setForm({
-      userId:"",
-      message:"",
-      type:"INFO"
-    });
-
-    refresh();
-  };
+});
 
 
-  return (
-    <form onSubmit={submit}>
+setMessage("");
 
-      <h2>Create Notification</h2>
+refresh();
 
-      <input
-        name="userId"
-        placeholder="User ID"
-        value={form.userId}
-        onChange={handleChange}
-      />
+};
 
 
-      <input
-        name="message"
-        placeholder="Message"
-        value={form.message}
-        onChange={handleChange}
-      />
+
+return (
+
+<div>
+
+<h2>Create Notification</h2>
 
 
-      <select
-        name="type"
-        value={form.type}
-        onChange={handleChange}
-      >
-        <option>INFO</option>
-        <option>WARNING</option>
-        <option>SUCCESS</option>
-      </select>
+<form onSubmit={send}>
 
 
-      <button>
-        Send
-      </button>
+<input
 
-    </form>
-  )
+placeholder="Write notification"
+
+value={message}
+
+onChange={
+e=>setMessage(e.target.value)
+}
+
+/>
+
+
+<button>
+Send
+</button>
+
+
+</form>
+
+</div>
+
+)
+
 }
 
 

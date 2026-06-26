@@ -5,33 +5,34 @@ return (
 
 <div>
 
-<h2>Notifications</h2>
+
+<h2>Your Notifications</h2>
 
 
 {
+
 notifications.length===0 ?
 
-<p>No Notifications</p>
+<p>No notifications yet</p>
+
 
 :
 
-notifications.map((n,index)=>(
+notifications.map((n,i)=>(
 
-<div key={index}>
+<div key={i}>
 
-<h4>{n.type}</h4>
-
-<p>
-User: {n.userId}
-</p>
+<h3>
+{n.type}
+</h3>
 
 <p>
 {n.message}
 </p>
 
-<hr/>
 
 </div>
+
 
 ))
 
