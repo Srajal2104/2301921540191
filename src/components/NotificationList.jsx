@@ -1,4 +1,23 @@
-function NotificationList({notifications}){
+import "./Notification.css";
+
+
+function NotificationList(
+{notifications=[]}
+){
+
+
+if(notifications.length===0){
+
+return (
+
+<p>
+No notifications yet 🔔
+</p>
+
+);
+
+}
+
 
 
 return (
@@ -6,25 +25,20 @@ return (
 <div>
 
 
-<h2>Your Notifications</h2>
-
-
 {
-
-notifications.length===0 ?
-
-<p>No notifications yet</p>
+notifications.map((n,index)=>(
 
 
-:
+<div 
+className="notification"
+key={index}
+>
 
-notifications.map((n,i)=>(
-
-<div key={i}>
 
 <h3>
 {n.type}
 </h3>
+
 
 <p>
 {n.message}
@@ -41,8 +55,10 @@ notifications.map((n,i)=>(
 
 </div>
 
-)
+);
+
 
 }
+
 
 export default NotificationList;

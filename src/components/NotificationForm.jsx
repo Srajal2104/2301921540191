@@ -1,31 +1,52 @@
 import {useState} from "react";
 import {createNotification} from "../services/api";
+import "./Notification.css";
 
 
 function NotificationForm({refresh}){
 
 
 const [message,setMessage]=useState("");
+const [sending,setSending]=useState(false);
 
-const send=async(e)=>{
+
+
+const send = async(e)=>{
 
 e.preventDefault();
 
 
-await createNotification({
+if(!message.trim())
+return;
 
-userId:"1",
 
-message,
+const newNotification = {
 
-type:"INFO"
+message: message,
 
-});
+type:"INFO",
+
+userId:"1"
+
+};
+
+
+// show immediately
+refresh(newNotification);
 
 
 setMessage("");
 
-refresh();
+setSending(true);
+
+
+
+await createNotification(newNotification);
+
+
+
+setSending(false);
+
 
 };
 
@@ -33,17 +54,12 @@ refresh();
 
 return (
 
-<div>
-
-<h2>Create Notification</h2>
-
-
 <form onSubmit={send}>
 
 
-<input
+<textarea
 
-placeholder="Write notification"
+placeholder="Write your notification..."
 
 value={message}
 
@@ -54,14 +70,21 @@ e=>setMessage(e.target.value)
 />
 
 
-<button>
-Send
+
+<button disabled={sending}>
+
+{
+sending
+?
+"Sending..."
+:
+"Send Notification"
+}
+
 </button>
 
 
 </form>
-
-</div>
 
 )
 

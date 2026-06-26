@@ -1,36 +1,63 @@
 const BASE_URL =
-"http://4.224.186.213/evaluation-service";
-
-
-const headers=()=>({
-
-"Content-Type":"application/json",
-
-Authorization:
-`Bearer ${localStorage.getItem("token")}`
-
-});
+  "http://4.224.186.213/evaluation-service";
 
 
 
 export async function createNotification(data){
 
 
-const res =
-await fetch(
+try{
+
+
+const response = await fetch(
+
 `${BASE_URL}/notifications`,
+
 {
 
 method:"POST",
 
-headers:headers(),
+headers:{
+
+"Content-Type":"application/json"
+
+},
 
 body:JSON.stringify(data)
 
-});
+}
+
+);
 
 
-return res.json();
+
+const result =
+await response.json();
+
+
+console.log(
+"CREATE:",
+result
+);
+
+
+return result;
+
+
+}
+
+catch(error){
+
+console.log(
+"CREATE ERROR:",
+error
+);
+
+
+return null;
+
+}
+
 
 }
 
@@ -40,16 +67,45 @@ return res.json();
 export async function getNotifications(){
 
 
-const res =
-await fetch(
-`${BASE_URL}/notifications`,
-{
-
-headers:headers()
-
-});
+try{
 
 
-return res.json();
+const response = await fetch(
+
+`${BASE_URL}/notifications`
+
+);
+
+
+
+const result =
+await response.json();
+
+
+console.log(
+"GET:",
+result
+);
+
+
+
+return result.notifications || result || [];
+
+
+}
+
+catch(error){
+
+console.log(
+"GET ERROR:",
+error
+);
+
+
+return [];
+
+
+}
+
 
 }
